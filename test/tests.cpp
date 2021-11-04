@@ -1,14 +1,56 @@
 #include <catch2/catch.hpp>
 
-unsigned int Factorial(unsigned int number)// NOLINT(misc-no-recursion)
+#include <ctime>
+
+#include "../src/median.hpp"
+
+TEST_CASE("without numbers", "[median]")
 {
-  return number <= 1 ? number : Factorial(number - 1) * number;
+    Median m;
+
+    REQUIRE(m.get_median() == 0);
 }
 
-TEST_CASE("Factorials are computed", "[factorial]")
+TEST_CASE("2 equal numbers", "[median]")
 {
-  REQUIRE(Factorial(1) == 1);
-  REQUIRE(Factorial(2) == 2);
-  REQUIRE(Factorial(3) == 6);
-  REQUIRE(Factorial(10) == 3628800);
+    Median m;
+
+    m.add(3);
+    m.add(3);
+
+    REQUIRE(m.get_median() == 3);
+}
+
+TEST_CASE("3 numbers", "[median]")
+{
+    Median m;
+
+    m.add(1);
+    m.add(3);
+    m.add(5);
+
+    REQUIRE(m.get_median() == 3);
+}
+
+TEST_CASE("3 numbers, 1 double", "[median]")
+{
+    Median m;
+
+    m.add(1);
+    m.add(1.3);
+    m.add(100);
+
+    REQUIRE(m.get_median() == 1.3);
+}
+
+TEST_CASE("add 1000 numbers", "[median]")
+{
+    Median m;
+
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
+
+    for(size_t i = 0; i < 1000; ++i)
+    {
+        m.add(std::rand());
+    }
 }
